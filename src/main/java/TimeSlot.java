@@ -1,28 +1,27 @@
-import java.util.Calendar;
 import java.util.Objects;
 
 public class TimeSlot {
 
-    private final Calendar start;
-    private final Calendar end;
+    private final Time start;
+    private final Time end;
 
-    public TimeSlot(Calendar start, Calendar end) {
+    public TimeSlot(Time start, Time end) {
         this.start = start;
         this.end = end;
     }
 
-    public TimeSlot(Calendar start, int lengthInMinutes) {
-        this.start = start;
-        this.end = start;
-        this.end.add(Calendar.MINUTE, lengthInMinutes);
-    }
-
-    public Calendar getStart() {
+    public Time getStart() {
         return start;
     }
 
-    public Calendar getEnd() {
+    public Time getEnd() {
         return end;
+    }
+
+    public boolean overlaps(TimeSlot timeSlot) {
+        return (this.start.compareTo(timeSlot.getStart()) >= 0 && this.end.compareTo(timeSlot.getEnd()) <= 0) ||
+                (this.start.compareTo(timeSlot.getStart()) >= 0 && this.start.compareTo(timeSlot.getEnd()) < 0) ||
+                (this.end.compareTo(timeSlot.getStart()) > 0 && this.end.compareTo(timeSlot.getEnd()) <= 0);
     }
 
     @Override
@@ -30,14 +29,7 @@ public class TimeSlot {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimeSlot timeSlot = (TimeSlot) o;
-        return start.get(Calendar.YEAR) == timeSlot.getStart().get(Calendar.YEAR) && 
-                start.get(Calendar.MONTH) == timeSlot.getStart().get(Calendar.MONTH) &&
-                start.get(Calendar.DATE) == timeSlot.getStart().get(Calendar.DATE) &&
-                start.get(Calendar.MINUTE) == timeSlot.getStart().get(Calendar.MINUTE) &&
-                end.get(Calendar.YEAR) == timeSlot.getEnd().get(Calendar.YEAR) &&
-                end.get(Calendar.MONTH) == timeSlot.getEnd().get(Calendar.MONTH) &&
-                end.get(Calendar.DATE) == timeSlot.getEnd().get(Calendar.DATE) &&
-                end.get(Calendar.MINUTE) == timeSlot.getEnd().get(Calendar.MINUTE);
+        return this.start == timeSlot.getStart() && this.end == timeSlot.getEnd();
     }
 
     @Override

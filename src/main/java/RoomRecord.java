@@ -1,18 +1,16 @@
-import java.util.Calendar;
-
 public class RoomRecord {
-    private final Calendar date;
+    private final Date date;
     private final int roomNumber;
     private final TimeSlot timeSlot;
     private int bookedBy;
 
-    public RoomRecord(Calendar date, int roomNumber, TimeSlot timeSlot) {
+    public RoomRecord(Date date, int roomNumber, TimeSlot timeSlot) {
         this.date = date;
         this.roomNumber = roomNumber;
         this.timeSlot = timeSlot;
     }
 
-    public Calendar getDate() {
+    public Date getDate() {
         return date;
     }
 

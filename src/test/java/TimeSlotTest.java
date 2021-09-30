@@ -1,56 +1,47 @@
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Time;
-import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TimeSlotTest {
-    static Calendar start;
-    static Calendar end;
+    static Time start;
+    static Time end;
     static TimeSlot timeSlot;
 
-    @BeforeEach
-    void setUp() {
-        start = Calendar.getInstance();
-        start.set(2020, Calendar.SEPTEMBER, 23, 8, 0);
-        end = start;
-        end.add(Calendar.MINUTE, 60);
+    @BeforeAll
+    static void setUp() {
+        start = new Time(8, 0);
+        end = new Time(9,0);
         timeSlot = new TimeSlot(start, end);
     }
 
     @Test
     void getStart() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(2020, Calendar.SEPTEMBER, 23, 8, 0);
-        assertAll("assert start time:",
-                () -> assertEquals(startTime.get(Calendar.YEAR), timeSlot.getStart().get(Calendar.YEAR)),
-                () -> assertEquals(startTime.get(Calendar.MONTH), timeSlot.getStart().get(Calendar.MONTH)),
-                () -> assertEquals(startTime.get(Calendar.DATE), timeSlot.getStart().get(Calendar.DATE)),
-                () -> assertEquals(startTime.get(Calendar.MINUTE), timeSlot.getStart().get(Calendar.MINUTE))
-        );
+        Time startTest = new Time(8,0);
+        assertEquals(startTest, timeSlot.getStart());
     }
 
     @Test
     void getEnd() {
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2020, Calendar.SEPTEMBER, 23, 8, 0);
-        assertAll("assert start time:",
-                () -> assertEquals(endTime.get(Calendar.YEAR), timeSlot.getEnd().get(Calendar.YEAR)),
-                () -> assertEquals(endTime.get(Calendar.MONTH), timeSlot.getEnd().get(Calendar.MONTH)),
-                () -> assertEquals(endTime.get(Calendar.DATE), timeSlot.getEnd().get(Calendar.DATE)),
-                () -> assertEquals(endTime.get(Calendar.MINUTE), timeSlot.getEnd().get(Calendar.MINUTE))
-        );
+        Time endTest = new Time(9,0);
+        assertEquals(endTest, timeSlot.getEnd());
+    }
+
+    @Test
+    void overlaps() {
+        TimeSlot overlappingEqual = new TimeSlot(start, end);
+        TimeSlot overlappingStart = new TimeSlot(new Time(8,30), new Time(10,0));
+        TimeSlot overlappingEnd = new TimeSlot(new Time(7,30), new Time(8, 30));
+        TimeSlot nonOverlapping = new TimeSlot(new Time(9,30), new Time(10,30));
+        assertTrue(overlappingEqual.overlaps(timeSlot));
+        assertTrue(overlappingStart.overlaps(timeSlot));
+        assertTrue(overlappingEnd.overlaps(timeSlot));
+        assertFalse(nonOverlapping.overlaps(timeSlot));
     }
 
     @Test
     void testEquals() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(2020, Calendar.SEPTEMBER, 23, 8, 0);
-        Calendar endTime = start;
-        endTime.add(Calendar.MINUTE, 60);
-        TimeSlot timeSlotTest = new TimeSlot(startTime, endTime);
-        assertEquals(timeSlotTest, timeSlot);
+        TimeSlot equalTimeSlot = new TimeSlot(start, end);
+        assertEquals(equalTimeSlot, timeSlot);
     }
 }

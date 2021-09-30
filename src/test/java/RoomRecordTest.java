@@ -1,73 +1,54 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class RoomRecordTest {
 
-    private static RoomRecord roomRecord;
+    static Date date1, date2;
+    static int roomNum1, roomNum2;
+    static TimeSlot timeSlot1, timeSlot2;
+    static RoomRecord roomRecord1, roomRecord2;
 
     @BeforeEach
     void setUp() {
-        Calendar date = Calendar.getInstance();
-        date.set(2020, Calendar.SEPTEMBER, 23);
-
-        int roomNumber = 203;
-
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(2020, Calendar.SEPTEMBER, 23, 8, 0);
-
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2020, Calendar.SEPTEMBER, 23, 9, 0);
-
-        TimeSlot timeSlot = new TimeSlot(startTime, endTime);
-
-        roomRecord = new RoomRecord(date, roomNumber, timeSlot);
-
+        date1 = new Date(2021, 9, 23);
+        date2 = new Date(2021, 9, 24);
+        roomNum1 = 201;
+        roomNum2 = 301;
+        timeSlot1 = new TimeSlot(new Time(8,0), new Time(9,0));
+        timeSlot2 = new TimeSlot(new Time(9,0), new Time(10,0));
+        roomRecord1 = new RoomRecord(date1, roomNum1, timeSlot1);
+        roomRecord2 = new RoomRecord(date1, roomNum1, timeSlot2);
     }
 
 
     @Test
     void getDate() {
-        Calendar date = Calendar.getInstance();
-        date.set(2020, Calendar.SEPTEMBER, 23);
-        assertAll("Assert same date",
-                () -> assertEquals(date.get(Calendar.YEAR), roomRecord.getDate().get(Calendar.YEAR)),
-                () -> assertEquals(date.get(Calendar.MONTH), roomRecord.getDate().get(Calendar.MONTH)),
-                () -> assertEquals(date.get(Calendar.DATE), roomRecord.getDate().get(Calendar.DATE))
-        );
-
+        assertEquals(date1, roomRecord1.getDate());
+        assertEquals(date1, roomRecord2.getDate());
     }
 
     @Test
     void getRoomNumber() {
-        assertEquals(203, roomRecord.getRoomNumber());
+        assertEquals(roomNum1, roomRecord1.getRoomNumber());
     }
 
     @Test
     void getTimeSlot() {
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(2020, Calendar.SEPTEMBER, 23, 8, 0);
-
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2020, Calendar.SEPTEMBER, 23, 9, 0);
-
-        TimeSlot timeSlot = new TimeSlot(startTime, endTime);
-        assertEquals(timeSlot, roomRecord.getTimeSlot());
+        assertEquals(timeSlot1, roomRecord1.getTimeSlot());
+        assertEquals(timeSlot2, roomRecord2.getTimeSlot());
     }
 
     @Test
     void getBookedBy() {
-        assertEquals(0, roomRecord.getBookedBy());
+        assertEquals(0, roomRecord1.getBookedBy());
     }
 
     @Test
     void setBookedBy() {
-        roomRecord.setBookedBy(30);
-        assertEquals(30, roomRecord.getBookedBy());
+        roomRecord1.setBookedBy(30);
+        assertEquals(30, roomRecord1.getBookedBy());
     }
 }
