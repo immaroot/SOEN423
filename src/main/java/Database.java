@@ -31,9 +31,13 @@ public class Database {
         if (!dates.get(date).containsKey(roomNumber)) {
             addRoom(date, roomNumber);
         }
-        if (!dates.get(date).get(roomNumber).containsKey(timeSlot)) {
+        if (!dates.get(date).get(roomNumber).containsKey(timeSlot) && !overlapsTimeSlots(date, roomNumber, timeSlot)) {
             dates.get(date).get(roomNumber).put(timeSlot, new RoomRecord(date, roomNumber, timeSlot));
         }
+    }
+
+    private boolean overlapsTimeSlots(Date date, int roomNumber, TimeSlot timeSlot) {
+        return dates.get(date).get(roomNumber).entrySet().stream().anyMatch(timeSlotRoomRecordEntry -> timeSlot.overlaps(timeSlotRoomRecordEntry.getKey()));
     }
 
     public Set<Date> getDates() {

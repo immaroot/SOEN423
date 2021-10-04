@@ -23,6 +23,11 @@ class RoomRecordTest {
         roomRecord2 = new RoomRecord(date1, roomNum1, timeSlot2);
     }
 
+    @Test
+    void roomRecordIdTest() {
+        assertEquals("RR00001", roomRecord1.getRoomRecordId());
+        assertEquals("RR00002", roomRecord2.getRoomRecordId());
+    }
 
     @Test
     void getDate() {
