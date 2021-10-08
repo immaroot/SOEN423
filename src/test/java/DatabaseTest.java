@@ -68,4 +68,9 @@ class DatabaseTest {
         assertTrue(timeSlots.contains(timeSlot1));
         assertTrue(timeSlots.contains(timeSlot2));
     }
+
+    @Test
+    void getCount() {
+        assertEquals(8, database.getRoomRecordCount());
+    }
 }

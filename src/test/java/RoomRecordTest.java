@@ -48,12 +48,12 @@ class RoomRecordTest {
 
     @Test
     void getBookedBy() {
-        assertEquals(0, roomRecord1.getBookedBy());
+        assertNull(roomRecord1.getBookedBy());
     }
 
     @Test
     void setBookedBy() {
-        roomRecord1.setBookedBy(30);
-        assertEquals(30, roomRecord1.getBookedBy());
+        roomRecord1.setBookedBy("30");
+        assertEquals("30", roomRecord1.getBookedBy());
     }
 }

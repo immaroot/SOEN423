@@ -1,4 +1,6 @@
-public class Time implements Comparable<Time> {
+import java.io.Serializable;
+
+public class Time implements Comparable<Time>, Serializable {
 
     int hour;
     int minutes;
@@ -36,5 +38,10 @@ public class Time implements Comparable<Time> {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return hour + ":" + minutes;
     }
 }

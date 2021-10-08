@@ -1,4 +1,6 @@
-public class Date implements Comparable<Date> {
+import java.io.Serializable;
+
+public class Date implements Comparable<Date>, Serializable {
 
     private final int year;
     private final int month;
@@ -50,5 +52,10 @@ public class Date implements Comparable<Date> {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return day + "-" + month + "-" + year;
     }
 }

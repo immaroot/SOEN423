@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class TimeSlot {
+public class TimeSlot implements Serializable {
 
     private final Time start;
     private final Time end;
@@ -35,5 +36,10 @@ public class TimeSlot {
     @Override
     public int hashCode() {
         return Objects.hash(start, end);
+    }
+
+    @Override
+    public String toString() {
+        return start + " to " + end;
     }
 }

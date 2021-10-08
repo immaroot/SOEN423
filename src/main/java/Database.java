@@ -1,4 +1,6 @@
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -52,4 +54,19 @@ public class Database {
         return dates.get(date).get(roomNumber).keySet();
     }
 
+    public Collection<RoomRecord> getRoomRecords(Date date, int roomNumber) {
+        return dates.get(date).get(roomNumber).values();
+    }
+
+    public Collection<RoomRecord> deleteRoomRecords(Date date, int roomNumber, Set<TimeSlot> timeSlotSet) {
+        ArrayList<RoomRecord> roomRecords = new ArrayList<>();
+        for (TimeSlot timeSlot : timeSlotSet) {
+            roomRecords.add(dates.get(date).get(roomNumber).remove(timeSlot));
+        }
+        return roomRecords;
+    }
+
+    public int getRoomRecordCount() {
+        return dates.keySet().stream().mapToInt(date -> getRooms(date).stream().mapToInt(roomNumber -> getRoomRecords(date, roomNumber).size()).sum()).sum();
+    }
 }
