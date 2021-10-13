@@ -41,6 +41,11 @@ public class Time implements Comparable<Time>, Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public String toString() {
         return hour + ":" + minutes;
     }

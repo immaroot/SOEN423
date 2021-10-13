@@ -1,9 +1,16 @@
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 class DatabaseTest {
     static Date date1, date2;
@@ -72,5 +79,32 @@ class DatabaseTest {
     @Test
     void getCount() {
         assertEquals(8, database.getRoomRecordCount());
+    }
+
+    @Test
+    void getTimeSlotAvailableCount() {
+        assertEquals(4, database.getTimeSlotAvailableCount(date1));
+    }
+
+    @Test
+    void getTimeSlotAvailableCountEmpty() {
+        Database newDatabase = new Database();
+        assertEquals(0, newDatabase.getTimeSlotAvailableCount(date1));
+    }
+
+    @Test
+    void deleteTimeSlotTest() {
+        Database databaseTest = new Database();
+        databaseTest.addTimeSlot(date1, roomNum1, timeSlot1);
+        Set<TimeSlot> timeSlotSet = new HashSet<>();
+        timeSlotSet.add(timeSlot1);
+        Optional<RoomRecord> actualTimeSlot = databaseTest.deleteRoomRecords(date1, roomNum1, timeSlotSet).stream().findFirst();
+        if (actualTimeSlot.isPresent()) {
+            assertEquals(timeSlot1, actualTimeSlot.get().getTimeSlot());
+        } else {
+            fail("fail");
+        }
+
+
     }
 }

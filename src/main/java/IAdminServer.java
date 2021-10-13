@@ -8,6 +8,4 @@ public interface IAdminServer extends Remote {
 
     String deleteRoom(int roomNumber, Date date, Set<TimeSlot> timeSlotSet, String id) throws RemoteException;
 
-    String sayHello() throws RemoteException;
-
 }

@@ -1,55 +1,41 @@
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.UnknownHostException;
+import java.net.*;
 
 public class RequestHandler implements Runnable {
 
-    private IStudentServer server = null;
-    private int portNumber;
-    private Campus campusLocation;
-    protected MulticastSocket socket = null;
-    protected byte[] buf = new byte[256];
+    private final CampusServer server;
+    private final DatagramPacket packet;
 
-    public RequestHandler(IStudentServer server, int portNumber, Campus campusLocation) {
+    public RequestHandler(CampusServer server, DatagramPacket packet) throws SocketException {
+        this.packet = packet;
         this.server = server;
-        this.portNumber = portNumber;
-        this.campusLocation = campusLocation;
+
     }
 
-    @Override
     public void run() {
+        DatagramSocket socket = server.socket;
+        InetAddress address = packet.getAddress();
+        int port = packet.getPort();
+        String received = new String(packet.getData(), 0, packet.getLength());
+
+        String message;
+        System.out.println(received);
+        String[] args = received.split("\\s");
+        if (args.length == 2 && args[0].matches("GET_COUNT") && args[1].matches("\\d{2}-\\d{2}-\\d{4}")) {
+            int day = Integer.parseInt(args[1].split("-")[0]);
+            int month = Integer.parseInt(args[1].split("-")[1]);
+            int year = Integer.parseInt(args[1].split("-")[2]);
+            message = "Hello from " + server.getCampusLocation().toString() + "\n" + server.getTimeSlotCount(new Date(year, month, day)) + "\n";
+        } else {
+            message = "Error";
+        }
+        byte[] buff = message.getBytes();
+        DatagramPacket response = new DatagramPacket(buff, buff.length, address, port);
 
         try {
-            this.socket = new MulticastSocket(this.portNumber);
+            socket.send(response);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        InetAddress group = null;
-        try {
-            group = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        try {
-            this.socket.joinGroup(group);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        while (true) {
-                DatagramPacket packet = new DatagramPacket(buf, buf.length);
-                try {
-                    socket.receive(packet);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String received = new String(packet.getData(), 0, packet.getLength());
-
-                if (received.startsWith("REQUEST_COUNT")) {
-
-                }
-            }
-
     }
 }

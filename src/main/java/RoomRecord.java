@@ -32,6 +32,10 @@ public class RoomRecord implements Serializable {
         return timeSlot;
     }
 
+    public boolean isBooked() {
+        return bookedBy != null;
+    }
+
     public String getBookedBy() {
         return bookedBy;
     }

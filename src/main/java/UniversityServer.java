@@ -24,12 +24,15 @@ public class UniversityServer {
 
         CampusServer kkl = new CampusServer(Campus.KKL);
         registry.bind(URI + "KKL", kkl);
+        new Thread(kkl).start();
 
         CampusServer wst = new CampusServer(Campus.WST);
         registry.bind(URI + "WST", wst);
+        new Thread(wst).start();
 
         CampusServer dvl = new CampusServer(Campus.DVL);
         registry.bind(URI + "DVL", dvl);
+        new Thread(dvl).start();
 
         System.out.println(Arrays.toString(registry.list()));
 

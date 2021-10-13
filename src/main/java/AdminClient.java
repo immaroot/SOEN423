@@ -42,7 +42,6 @@ public class AdminClient {
 
             System.out.println("1- Create a room record.");
             System.out.println("2- Delete a room record.");
-            System.out.println("3- Say hello!");
             System.out.println("0- Exit program");
 
             userOption = reader.nextInt();
@@ -52,10 +51,7 @@ public class AdminClient {
                     requestCreateRoom(client);
                     break;
                 case 2:
-                    requestDeleteRoom();
-                    break;
-                case 3:
-                    requestSayHello(client);
+                    requestDeleteRoom(client);
                     break;
                 case 0:
                     userExitRequest = true;
@@ -70,23 +66,55 @@ public class AdminClient {
         }
     }
 
-    private static void requestSayHello(CampusAdminClient client) throws RemoteException {
-        String message = client.sayHello();
-        System.out.println(message);
+    private static void requestCreateRoom(CampusAdminClient client) throws RemoteException {
+        Scanner reader;
+        reader = new Scanner(System.in);
+        String dateInput;
+        String startTimeInput;
+        String endTimeInput;
+        Date date;
+        TimeSlot timeSlot;
+
+        System.out.println("Creating new time slot for a room:");
+
+        System.out.print("Enter the room number:");
+        int roomNumber = reader.nextInt();
+
+        do {
+            System.out.print("Enter the date with format DD-MM-YYYY:");
+            dateInput = reader.nextLine();
+        } while (!isDateFormat(dateInput));
+
+
+        do {
+            System.out.print("Enter start time of the time slot with format HH:MM :");
+            startTimeInput = reader.nextLine();
+        } while (!isTimeFormat(startTimeInput));
+
+        do {
+            System.out.print("Enter end time of the time slot with format HH:MM :");
+            endTimeInput = reader.nextLine();
+        } while (!isTimeFormat(endTimeInput));
+
+        date = extractDate(dateInput);
+
+        timeSlot = new TimeSlot(extractTime(startTimeInput), extractTime(endTimeInput));
+
+        System.out.println();
+
+        System.out.println("Attempting to create new room record....");
+
+        Set<TimeSlot> timeSlotSet = new HashSet<>();
+        timeSlotSet.add(timeSlot);
+        String roomRecord = client.createRoom(roomNumber, date, timeSlotSet);
+
+        System.out.println("Created RoomRecord for room num: " + roomRecord );
     }
 
-    private static void requestCreateRoom(CampusAdminClient client) throws RemoteException {
+    private static void requestDeleteRoom(CampusAdminClient client) throws RemoteException {
         Scanner reader = new Scanner(System.in);
         String dateInput, startTimeInput, endTimeInput;
         int roomNumber;
-        int year = 0;
-        int month = 0;
-        int day = 0;
-        int startHour = 0;
-        int startMinute = 0;
-        int endHour = 0;
-        int endMinute = 0;
-
         Date date;
         TimeSlot timeSlot;
 
@@ -98,21 +126,22 @@ public class AdminClient {
         do {
             System.out.print("Enter the date with format DD-MM-YYYY:");
             dateInput = reader.nextLine();
-        } while (!extractedDateInput(dateInput, day, month, year));
+        } while (!isDateFormat(dateInput));
 
 
         do {
             System.out.print("Enter start time of the time slot with format HH:MM :");
             startTimeInput = reader.nextLine();
-        } while (!extractedTimeInput(startTimeInput, startHour, startMinute));
+        } while (!isTimeFormat(startTimeInput));
 
         do {
             System.out.print("Enter end time of the time slot with format HH:MM :");
             endTimeInput = reader.nextLine();
-        } while (!extractedTimeInput(endTimeInput, endHour, endMinute));
+        } while (!isTimeFormat(endTimeInput));
 
-        date = new Date(year, month, day);
-        timeSlot = new TimeSlot(new Time(startHour, startMinute), new Time(endHour, endMinute));
+        date = extractDate(dateInput);
+
+        timeSlot = new TimeSlot(extractTime(startTimeInput), extractTime(endTimeInput));
 
         System.out.println();
 
@@ -120,59 +149,9 @@ public class AdminClient {
 
         Set<TimeSlot> timeSlotSet = new HashSet<>();
         timeSlotSet.add(timeSlot);
-        String roomRecord = client.createRoom(roomNumber, date, timeSlotSet);
+        String roomRecord = client.deleteRoom(roomNumber, date, timeSlotSet);
 
-
-        System.out.println("Created room record fot room num: " + roomRecord );
-
-    }
-
-    private static void requestDeleteRoom() {
-        Scanner reader = new Scanner(System.in);
-        int roomNumber;
-        int year;
-        int month;
-        int day;
-        int startHour;
-        int startMinute;
-        int endHour;
-        int endMinute;
-
-        Date date;
-        TimeSlot timeSlot;
-
-        System.out.println("Deleting time slot for a room:");
-
-        System.out.print("Enter the room number:");
-        roomNumber = reader.nextInt();
-
-        System.out.print("Enter the year of date:");
-        year = reader.nextInt();
-
-        System.out.print("Enter the month of date:");
-        month = reader.nextInt();
-
-        System.out.print("Enter the day of date:");
-        day = reader.nextInt();
-
-        System.out.print("Enter start hour of the time slot:");
-        startHour = reader.nextInt();
-
-        System.out.print("Enter start minute of the time slot:");
-        startMinute = reader.nextInt();
-
-        System.out.print("Enter end hour of the time slot:");
-        endHour = reader.nextInt();
-
-        System.out.print("Enter end minute of the time slot:");
-        endMinute = reader.nextInt();
-
-        date = new Date(year, month, day);
-        timeSlot = new TimeSlot(new Time(startHour, startMinute), new Time(endHour, endMinute));
-
-        System.out.println();
-
-        System.out.println("Attempting to delete room record....");
+        System.out.println("RoomRecord deleted for room num: " + roomRecord);
     }
 
     private static boolean extractedTimeInput(String input, int hour, int min) {
@@ -194,5 +173,26 @@ public class AdminClient {
         } else {
             return false;
         }
+    }
+
+    private static boolean isTimeFormat(String input) {
+        return input.matches("\\d{2}:\\d{2}");
+    }
+
+    private static boolean isDateFormat(String input) {
+        return input.matches("\\d{2}-\\d{2}-\\d{4}");
+    }
+
+    private static Date extractDate(String input) {
+        int day = Integer.parseInt(input.split("-")[0]);
+        int month = Integer.parseInt(input.split("-")[1]);
+        int year = Integer.parseInt(input.split("-")[2]);
+        return new Date(year, month, day);
+    }
+
+    private static Time extractTime(String input) {
+        int hour   = Integer.parseInt(input.split(":")[0]);
+        int min = Integer.parseInt(input.split(":")[1]);
+        return new Time(hour, min);
     }
 }

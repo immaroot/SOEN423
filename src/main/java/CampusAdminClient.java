@@ -20,8 +20,7 @@ public class CampusAdminClient implements ICampusAdminClient {
 
     @Override
     public String createRoom(int roomNumber, Date date, Set<TimeSlot> timeSlotSet) throws RemoteException {
-        this.server.createRoom(roomNumber, date, timeSlotSet, this.adminID);
-        return "Success";
+        return this.server.createRoom(roomNumber, date, timeSlotSet, this.adminID);
     }
 
     @Override

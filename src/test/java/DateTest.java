@@ -48,4 +48,9 @@ public class DateTest {
         );
     }
 
+    @Test
+    void toStringTest() {
+        assertEquals("01-01-0020", new Date(20,1,1).toString());
+    }
+
 }

@@ -8,7 +8,4 @@ public interface IStudentServer extends Remote {
     String getAvailableTimeSlot(Date date, String id) throws RemoteException;
 
     String cancelBooking(String bookingID, String id) throws RemoteException;
-
-    String sayHello() throws RemoteException;
-
 }

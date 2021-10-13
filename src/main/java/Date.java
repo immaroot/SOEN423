@@ -51,11 +51,11 @@ public class Date implements Comparable<Date>, Serializable {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return day + month + year;
     }
 
     @Override
     public String toString() {
-        return day + "-" + month + "-" + year;
+        return String.format("%02d-%02d-%04d", day, month, year);
     }
 }
