@@ -36,8 +36,13 @@ public class CampusServer extends UnicastRemoteObject implements IAdminServer, I
     }
 
     @Override
-    public RoomRecord bookRoom(String campusName, int roomNumber, Date date, TimeSlot timeSlot, String id) throws RemoteException {
-        return null;
+    public RoomRecord bookRoom(Campus campus, int roomNumber, Date date, TimeSlot timeSlot, String id) throws RemoteException {
+        if (!this.database.isBooked(date, roomNumber, timeSlot)) {
+            this.database.bookTimeSlot(date, roomNumber, timeSlot, id);
+            return this.database.getRoomRecord(date, roomNumber, timeSlot);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -83,8 +88,15 @@ public class CampusServer extends UnicastRemoteObject implements IAdminServer, I
     }
 
     @Override
-    public String cancelBooking(String bookingID, String id) throws RemoteException {
-        return null;
+    public RoomRecord cancelBooking(String bookingID, String id) throws RemoteException {
+        RoomRecord record;
+        if (this.database.hasBookingID(bookingID)) {
+            record = this.database.getRoomRecordByBookingID(bookingID);
+            record.cancelReservation();
+            return record;
+        } else {
+            return null;
+        }
     }
 
     public Campus getCampusLocation() {

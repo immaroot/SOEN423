@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Date implements Comparable<Date>, Serializable {
 
@@ -51,7 +52,7 @@ public class Date implements Comparable<Date>, Serializable {
 
     @Override
     public int hashCode() {
-        return day + month + year;
+        return Objects.hash(year, month, day);
     }
 
     @Override

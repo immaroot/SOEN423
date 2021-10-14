@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.UUID;
 
 public class RoomRecord implements Serializable {
 
@@ -7,6 +8,7 @@ public class RoomRecord implements Serializable {
     private final TimeSlot timeSlot;
     private final String roomRecordId;
     private String bookedBy;
+    private String bookingID;
     private static int recordIdNumberCounter = 0;
 
     public RoomRecord(Date date, int roomNumber, TimeSlot timeSlot) {
@@ -42,6 +44,22 @@ public class RoomRecord implements Serializable {
 
     public void setBookedBy(String bookedBy) {
         this.bookedBy = bookedBy;
+    }
+
+    public String generateBookingID() {
+        UUID uuid = UUID.randomUUID();
+        bookingID = uuid.toString();
+        return bookingID;
+    }
+
+    public String getBookingID() {
+        return bookingID;
+    }
+
+
+    public void cancelReservation() {
+        bookingID = null;
+        bookedBy = null;
     }
 
     @Override

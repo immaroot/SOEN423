@@ -4,10 +4,7 @@ import java.io.InputStreamReader;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class AdminClient {
 
@@ -67,38 +64,35 @@ public class AdminClient {
     }
 
     private static void requestCreateRoom(CampusAdminClient client) throws RemoteException {
-        Scanner reader;
-        reader = new Scanner(System.in);
-        String dateInput;
-        String startTimeInput;
-        String endTimeInput;
-        Date date;
-        TimeSlot timeSlot;
+        Scanner reader = new Scanner(System.in);
 
         System.out.println("Creating new time slot for a room:");
 
         System.out.print("Enter the room number:");
         int roomNumber = reader.nextInt();
 
+        String dateInput;
         do {
             System.out.print("Enter the date with format DD-MM-YYYY:");
             dateInput = reader.nextLine();
         } while (!isDateFormat(dateInput));
 
 
+        String startTimeInput;
         do {
             System.out.print("Enter start time of the time slot with format HH:MM :");
             startTimeInput = reader.nextLine();
         } while (!isTimeFormat(startTimeInput));
 
+        String endTimeInput;
         do {
             System.out.print("Enter end time of the time slot with format HH:MM :");
             endTimeInput = reader.nextLine();
         } while (!isTimeFormat(endTimeInput));
 
-        date = extractDate(dateInput);
+        Date date = extractDate(dateInput);
 
-        timeSlot = new TimeSlot(extractTime(startTimeInput), extractTime(endTimeInput));
+        TimeSlot timeSlot = new TimeSlot(extractTime(startTimeInput), extractTime(endTimeInput));
 
         System.out.println();
 
@@ -108,7 +102,7 @@ public class AdminClient {
         timeSlotSet.add(timeSlot);
         String roomRecord = client.createRoom(roomNumber, date, timeSlotSet);
 
-        System.out.println("Created RoomRecord for room num: " + roomRecord );
+        System.out.println("Created RoomRecord for room num: " + roomRecord.toString() );
     }
 
     private static void requestDeleteRoom(CampusAdminClient client) throws RemoteException {
@@ -118,7 +112,7 @@ public class AdminClient {
         Date date;
         TimeSlot timeSlot;
 
-        System.out.println("Creating new time slot for a room:");
+        System.out.println("Deleting a time slot for a room:");
 
         System.out.print("Enter the room number:");
         roomNumber = reader.nextInt();
@@ -145,7 +139,7 @@ public class AdminClient {
 
         System.out.println();
 
-        System.out.println("Attempting to create new room record....");
+        System.out.println("Attempting to delete room record....");
 
         Set<TimeSlot> timeSlotSet = new HashSet<>();
         timeSlotSet.add(timeSlot);

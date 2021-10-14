@@ -36,4 +36,14 @@ public class TimeTest {
                 () -> assertEquals(1, time3.compareTo(time1))
         );
     }
+
+    @Test
+    void testEqual() {
+        assertEquals(new Time(9,0), new Time(9,0));
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(new Time(9,0).hashCode(), new Time(9,0).hashCode());
+    }
 }

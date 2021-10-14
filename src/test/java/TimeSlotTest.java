@@ -44,4 +44,9 @@ class TimeSlotTest {
         TimeSlot equalTimeSlot = new TimeSlot(start, end);
         assertEquals(equalTimeSlot, timeSlot);
     }
+
+    @Test
+    void testHashCode() {
+        assertEquals(timeSlot.hashCode(), new TimeSlot(new Time(8,0), new Time(9,0)).hashCode());
+    }
 }

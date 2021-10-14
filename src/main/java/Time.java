@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Time implements Comparable<Time>, Serializable {
 
@@ -42,7 +43,7 @@ public class Time implements Comparable<Time>, Serializable {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(hour, minutes);
     }
 
     @Override

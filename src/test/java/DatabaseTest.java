@@ -1,9 +1,5 @@
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.crypto.Data;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -12,14 +8,14 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-class DatabaseTest {
+public class DatabaseTest {
     static Date date1, date2;
     static int roomNum1, roomNum2;
     static TimeSlot timeSlot1, timeSlot2;
     static Database database;
 
     @BeforeAll
-    static void setUp() {
+    public static void setUp() {
         date1 = new Date(2021, 9, 23);
         date2 = new Date(2021, 9, 24);
         roomNum1 = 201;
@@ -56,44 +52,44 @@ class DatabaseTest {
     }
 
     @Test
-    void getDates() {
+    public void getDates() {
         Collection<Date> dates = database.getDates();
         assertTrue(dates.contains(date1));
         assertTrue(dates.contains(date2));
     }
 
     @Test
-    void getRooms() {
+    public void getRooms() {
         Collection<Integer> rooms = database.getRooms(date1);
         assertTrue(rooms.contains(roomNum1));
         assertTrue(rooms.contains(roomNum2));
     }
 
     @Test
-    void getTimeSlots() {
+    public void getTimeSlots() {
         Collection<TimeSlot> timeSlots = database.getTimeSlots(date1, roomNum1);
         assertTrue(timeSlots.contains(timeSlot1));
         assertTrue(timeSlots.contains(timeSlot2));
     }
 
     @Test
-    void getCount() {
+    public void getCount() {
         assertEquals(8, database.getRoomRecordCount());
     }
 
     @Test
-    void getTimeSlotAvailableCount() {
+    public void getTimeSlotAvailableCount() {
         assertEquals(4, database.getTimeSlotAvailableCount(date1));
     }
 
     @Test
-    void getTimeSlotAvailableCountEmpty() {
+    public void getTimeSlotAvailableCountEmpty() {
         Database newDatabase = new Database();
         assertEquals(0, newDatabase.getTimeSlotAvailableCount(date1));
     }
 
     @Test
-    void deleteTimeSlotTest() {
+    public void deleteTimeSlotTest() {
         Database databaseTest = new Database();
         databaseTest.addTimeSlot(date1, roomNum1, timeSlot1);
         Set<TimeSlot> timeSlotSet = new HashSet<>();
@@ -104,7 +100,11 @@ class DatabaseTest {
         } else {
             fail("fail");
         }
+    }
 
-
+    @Test
+    public void verifyBookingID() {
+        String bookingID = database.getRoomRecord(date1, roomNum1, timeSlot1).generateBookingID();
+        assertEquals(bookingID, database.getRoomRecord(date1, roomNum1, timeSlot1).getBookingID());
     }
 }

@@ -27,10 +27,4 @@ public class CampusAdminClient implements ICampusAdminClient {
     public String deleteRoom(int roomNumber, Date date, Set<TimeSlot> timeSlotSet) throws RemoteException {
         return this.server.deleteRoom(roomNumber, date, timeSlotSet, this.adminID);
     }
-
-    @Override
-    public String sayHello() {
-        return "Hello there!";
-    }
-
 }

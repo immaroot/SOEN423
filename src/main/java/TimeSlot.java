@@ -30,7 +30,7 @@ public class TimeSlot implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimeSlot timeSlot = (TimeSlot) o;
-        return this.start == timeSlot.getStart() && this.end == timeSlot.getEnd();
+        return this.start.equals(timeSlot.start) && this.end.equals(timeSlot.end);
     }
 
     @Override

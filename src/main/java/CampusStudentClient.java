@@ -20,7 +20,7 @@ public class CampusStudentClient implements ICampusStudentClient {
     }
 
     @Override
-    public RoomRecord bookRoom(String campusName, int roomNumber, Date date, TimeSlot timeSlot) throws RemoteException {
+    public String bookRoom(Campus campusName, int roomNumber, Date date, TimeSlot timeSlot) throws RemoteException {
         RoomRecord record = null;
         try {
             IStudentServer requestedServer = (IStudentServer) registry.lookup("rmi://localhost:1234/" + campusName);
@@ -28,7 +28,11 @@ public class CampusStudentClient implements ICampusStudentClient {
         } catch (NotBoundException e) {
             e.printStackTrace();
         }
-        return record;
+        if (record != null) {
+            return "The room " + record.getRoomNumber() + " at " + campusName + " for " + record.getDate() + " for " + record.getTimeSlot() + " is booked.\nYour bookingID id: " + record.getBookingID();
+        } else {
+            return "Could not be booked.";
+        }
     }
 
     @Override
@@ -38,6 +42,11 @@ public class CampusStudentClient implements ICampusStudentClient {
 
     @Override
     public String cancelBooking(String bookingID) throws RemoteException {
-        return this.server.cancelBooking(bookingID, this.studentID);
+        RoomRecord record = this.server.cancelBooking(bookingID, this.studentID);
+        if (record != null) {
+            return "Your reservation for room " + record.getRoomNumber() + " for " + record.getDate() + " for " + record.getTimeSlot() + " is cancelled";
+        } else {
+            return "Could not cancel";
+        }
     }
 }
