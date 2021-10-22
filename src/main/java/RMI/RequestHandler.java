@@ -1,3 +1,8 @@
+package RMI;
+
+import Core.Date;
+import RMI.CampusServer;
+
 import java.io.IOException;
 import java.net.*;
 

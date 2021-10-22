@@ -1,3 +1,5 @@
+package Core;
+
 public enum Campus {
     KKL (1),
     WST (2),

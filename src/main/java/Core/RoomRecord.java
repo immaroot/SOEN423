@@ -1,3 +1,5 @@
+package Core;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -64,7 +66,7 @@ public class RoomRecord implements Serializable {
 
     @Override
     public String toString() {
-        return "RoomRecord{" +
+        return "Core.RoomRecord{" +
                 "date=" + date +
                 ", roomNumber=" + roomNumber +
                 ", timeSlot=" + timeSlot +

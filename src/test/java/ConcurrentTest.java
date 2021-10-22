@@ -1,3 +1,6 @@
+import Core.Campus;
+import RMI.CampusServer;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

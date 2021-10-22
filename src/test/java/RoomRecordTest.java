@@ -1,3 +1,7 @@
+import Core.Date;
+import Core.RoomRecord;
+import Core.Time;
+import Core.TimeSlot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

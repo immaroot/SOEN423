@@ -1,3 +1,7 @@
+package RMI;
+
+import Core.*;
+
 import java.io.IOException;
 import java.net.*;
 import java.rmi.RemoteException;
@@ -12,7 +16,7 @@ public class CampusServer extends UnicastRemoteObject implements IAdminServer, I
     Campus campusLocation;
     DatagramSocket socket;
 
-    protected CampusServer(Campus campusLocation) throws RemoteException {
+    public CampusServer(Campus campusLocation) throws RemoteException {
         super();
         this.database = new Database();
         this.campusLocation = campusLocation;

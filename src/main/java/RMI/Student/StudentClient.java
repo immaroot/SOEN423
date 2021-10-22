@@ -1,10 +1,15 @@
+package RMI.Student;
+
+import Core.Campus;
+import Core.Date;
+import Core.Time;
+import Core.TimeSlot;
+
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class StudentClient {
 
@@ -47,7 +52,7 @@ public class StudentClient {
 
                 switch (userOption) {
                     case 1:
-                        System.out.println(client.getAvailableTimeSlot(new Date(1000,10,10)));
+                        requestAvailableTimeSlot(client);
                         break;
                     case 2:
                         requestBookRoom(client);
@@ -66,6 +71,20 @@ public class StudentClient {
         } catch (NotBoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void requestAvailableTimeSlot(CampusStudentClient client) throws RemoteException {
+
+        Scanner reader;
+        reader = new Scanner(System.in);
+        String dateInput;
+        do {
+            System.out.print("Enter the date with format DD-MM-YYYY:");
+            dateInput = reader.nextLine();
+        } while (!isDateFormat(dateInput));
+
+        Date date = extractDate(dateInput);
+        System.out.println(client.getAvailableTimeSlot(date));
     }
 
     private static void requestCancelReservation(CampusStudentClient client) throws RemoteException {

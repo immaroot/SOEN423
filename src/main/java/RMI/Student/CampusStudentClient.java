@@ -1,3 +1,7 @@
+package RMI.Student;
+
+import Core.*;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

@@ -1,9 +1,12 @@
+package Core;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 
 public class Logger {
@@ -13,8 +16,10 @@ public class Logger {
 
     public Logger(String name) throws IOException {
         this.name = name;
-        Files.createDirectories(Path.of("./logs"));
-        file_path = Path.of("./logs/", name + ".txt");
+//        Files.createDirectories(Path.of("./logs"));
+        Files.createDirectories(Paths.get("./logs"));
+        file_path = Paths.get("./logs/", name + ".txt");
+//        file_path = Path.of("./logs/", name + ".txt");
         String welcomeMessage =  Calendar.getInstance().getTime() +  "\n--------------\nWelcome: " + name;
         message(welcomeMessage);
     }

@@ -1,7 +1,10 @@
-import java.io.BufferedReader;
+package RMI.Admin;
+
+import Core.Date;
+import Core.Time;
+import Core.TimeSlot;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -90,7 +93,7 @@ public class AdminClient {
             endTimeInput = reader.nextLine();
         } while (!isTimeFormat(endTimeInput));
 
-        Date date = extractDate(dateInput);
+        Core.Date date = extractDate(dateInput);
 
         TimeSlot timeSlot = new TimeSlot(extractTime(startTimeInput), extractTime(endTimeInput));
 
@@ -102,7 +105,7 @@ public class AdminClient {
         timeSlotSet.add(timeSlot);
         String roomRecord = client.createRoom(roomNumber, date, timeSlotSet);
 
-        System.out.println("Created RoomRecord for room num: " + roomRecord.toString() );
+        System.out.println("Created Core.RoomRecord for room num: " + roomRecord.toString() );
     }
 
     private static void requestDeleteRoom(CampusAdminClient client) throws RemoteException {
@@ -145,7 +148,7 @@ public class AdminClient {
         timeSlotSet.add(timeSlot);
         String roomRecord = client.deleteRoom(roomNumber, date, timeSlotSet);
 
-        System.out.println("RoomRecord deleted for room num: " + roomRecord);
+        System.out.println("Core.RoomRecord deleted for room num: " + roomRecord);
     }
 
     private static boolean extractedTimeInput(String input, int hour, int min) {
@@ -177,11 +180,11 @@ public class AdminClient {
         return input.matches("\\d{2}-\\d{2}-\\d{4}");
     }
 
-    private static Date extractDate(String input) {
+    private static Core.Date extractDate(String input) {
         int day = Integer.parseInt(input.split("-")[0]);
         int month = Integer.parseInt(input.split("-")[1]);
         int year = Integer.parseInt(input.split("-")[2]);
-        return new Date(year, month, day);
+        return new Core.Date(year, month, day);
     }
 
     private static Time extractTime(String input) {

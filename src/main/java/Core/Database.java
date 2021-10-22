@@ -1,7 +1,7 @@
+package Core;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Database {
     private final HashMap<Date, HashMap<Integer, HashMap<TimeSlot, RoomRecord>>> dates;

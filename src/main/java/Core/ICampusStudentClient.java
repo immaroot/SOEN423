@@ -1,3 +1,5 @@
+package Core;
+
 import java.rmi.RemoteException;
 
 public interface ICampusStudentClient {

@@ -1,3 +1,5 @@
+import Core.Time;
+import Core.TimeSlot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
