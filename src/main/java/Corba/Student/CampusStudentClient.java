@@ -1,6 +1,7 @@
 package Corba.Student;
 
 import Corba.CampusServerApp.Campus;
+import Corba.CampusServerApp.CampusServer;
 import Corba.CampusServerApp.Date;
 import Corba.CampusServerApp.TimeSlot;
 import Core.Logger;
@@ -15,7 +16,7 @@ public class CampusStudentClient implements ICampusStudentClient {
     private String studentID;
     private Campus campusLocation;
     private Logger logger;
-    private final IStudentServer server;
+    private final CampusServer server;
 
     public CampusStudentClient(String studentID, String[] args) throws Exception {
         this.studentID = studentID;
@@ -35,15 +36,18 @@ public class CampusStudentClient implements ICampusStudentClient {
         }
 
         Properties props = new Properties();
-        props.put("org.omg.CORBA.ORBInitialPort", "1500");
+        props.put("org.omg.CORBA.ORBInitialPort", "1050");
+        props.put("org.omg.CORBA.ORBInitialHost", "localhost");
         ORB orb = ORB.init(args, props);
 
         org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
-        String name = "CampusServer:" + campusLocation.toString();
+        String name = "server" + campusLocation.value();
 
-        server = (IStudentServer) Corba.CampusServerApp.CampusServerHelper.narrow(ncRef.resolve_str(name));
+        System.out.println("Trying to retrieve server called: " + name);
+
+        server = Corba.CampusServerApp.CampusServerHelper.narrow(ncRef.resolve_str(name));
 
         System.out.println("Client connected to server..");
     }

@@ -47,7 +47,7 @@ public class CampusServer extends CampusServerPOA implements IAdminServer, IStud
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        String message = "GET_COUNT " + date;
+        String message = "GET_COUNT " + date.day + "-" + date.month + "-" + date.year;
         for (Core.Campus campus : Core.Campus.values()) {
 
             //send request for counts except if this campus
@@ -56,7 +56,7 @@ public class CampusServer extends CampusServerPOA implements IAdminServer, IStud
                 System.out.println("Sending to " + campus);
                 System.out.println(message);
 
-                int serverPort = 6000 + campus.getIndex();
+                int serverPort = 6000 + campus.getIndex() - 1;
                 buf = message.getBytes();
                 try {
                     DatagramSocket socket = new DatagramSocket();

@@ -11,6 +11,7 @@ import org.omg.PortableServer.POAHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class UniversityServer {
 
@@ -18,7 +19,11 @@ public class UniversityServer {
 
         try {
 
-            ORB orb = ORB.init(args, null);
+            Properties props = new Properties();
+            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+            props.put("org.omg.CORBA.ORBInitialHost", "localhost");
+
+            ORB orb = ORB.init(args, props);
             POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootPoa.the_POAManager().activate();
 
@@ -28,6 +33,9 @@ public class UniversityServer {
             serverList.add(new CampusServer(Campus.DVL));
 
             for (CampusServer server : serverList) {
+
+                new Thread(server).start();
+
                 server.setOrb(orb);
                 org.omg.CORBA.Object ref = rootPoa.servant_to_reference(server);
                 Corba.CampusServerApp.CampusServer href = CampusServerHelper.narrow(ref);
@@ -38,12 +46,13 @@ public class UniversityServer {
 
                 String name = "server" + server.campusLocation.value();
 
-                System.out.println("Settting up " + name + " server");
+                System.out.println("Setting up " + name + " server");
 
                 NameComponent[] path = ncRef.to_name(name);
                 ncRef.rebind(path, href);
 
                 System.out.println("Server " + name + " is waiting...");
+
 
             }
 

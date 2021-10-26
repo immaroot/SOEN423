@@ -39,6 +39,7 @@ public class CampusAdminClient implements ICampusAdminClient {
 
         Properties props = new Properties();
         props.put("org.omg.CORBA.ORBInitialPort", "1050");
+        props.put("org.omg.CORBA.ORBInitialHost", "localhost");
         ORB orb = ORB.init(args, props);
 
         org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
