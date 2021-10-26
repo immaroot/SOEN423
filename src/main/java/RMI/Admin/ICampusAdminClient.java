@@ -1,4 +1,7 @@
-package Core;
+package RMI.Admin;
+
+import Core.Date;
+import Core.TimeSlot;
 
 import java.rmi.RemoteException;
 import java.util.Set;

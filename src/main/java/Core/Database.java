@@ -10,13 +10,13 @@ public class Database {
         dates = new HashMap<>();
     }
 
-    public void addDate(Date date) {
+    synchronized public void addDate(Date date) {
         if (!dates.containsKey(date)) {
             dates.put(date, new HashMap<>());
         }
     }
 
-    public void addRoom(Date date, int roomNumber) {
+    synchronized public void addRoom(Date date, int roomNumber) {
         if (!dates.containsKey(date)) {
             addDate(date);
         }
@@ -25,7 +25,7 @@ public class Database {
         }
     }
 
-    public boolean addTimeSlot(Date date, int roomNumber, TimeSlot timeSlot) {
+    synchronized public boolean addTimeSlot(Date date, int roomNumber, TimeSlot timeSlot) {
         if (!dates.containsKey(date)) {
             addDate(date);
         }
@@ -40,27 +40,27 @@ public class Database {
         }
     }
 
-    private boolean overlapsTimeSlots(Date date, int roomNumber, TimeSlot timeSlot) {
+    synchronized private boolean overlapsTimeSlots(Date date, int roomNumber, TimeSlot timeSlot) {
         return dates.get(date).get(roomNumber).entrySet().stream().anyMatch(timeSlotRoomRecordEntry -> timeSlot.overlaps(timeSlotRoomRecordEntry.getKey()));
     }
 
-    public Set<Date> getDates() {
+    synchronized public Set<Date> getDates() {
         return dates.keySet();
     }
 
-    public Set<Integer> getRooms(Date date) {
+    synchronized public Set<Integer> getRooms(Date date) {
         return dates.get(date).keySet();
     }
 
-    public Set<TimeSlot> getTimeSlots(Date date, int roomNumber) {
+    synchronized public Set<TimeSlot> getTimeSlots(Date date, int roomNumber) {
         return dates.get(date).get(roomNumber).keySet();
     }
 
-    public Collection<RoomRecord> getRoomRecords(Date date, int roomNumber) {
+    synchronized public Collection<RoomRecord> getRoomRecords(Date date, int roomNumber) {
         return dates.get(date).get(roomNumber).values();
     }
 
-    public Collection<RoomRecord> deleteRoomRecords(Date date, int roomNumber, Set<TimeSlot> timeSlotSet) {
+    synchronized public Collection<RoomRecord> deleteRoomRecords(Date date, int roomNumber, Set<TimeSlot> timeSlotSet) {
         ArrayList<RoomRecord> roomRecords = new ArrayList<>();
 
         if (dates.containsKey(date) && dates.get(date).containsKey(roomNumber)) {
@@ -72,7 +72,7 @@ public class Database {
         return roomRecords;
     }
 
-    public int getRoomRecordCount() {
+    synchronized public int getRoomRecordCount() {
         return dates.keySet().stream().mapToInt(date -> getRooms(date).stream().mapToInt(roomNumber -> getRoomRecords(date, roomNumber).size()).sum()).sum();
     }
 
@@ -101,23 +101,23 @@ public class Database {
 //                -> timeSlotRoomRecordHashMap.values().stream().filter(roomRecord -> !roomRecord.isBooked()).count()));
     }
 
-    public boolean hasDate(Date date) {
+    synchronized public boolean hasDate(Date date) {
         return dates.containsKey(date);
     }
 
-    public boolean hasRoom(Date date, int roomNumber) {
+    synchronized public boolean hasRoom(Date date, int roomNumber) {
         return hasDate(date) && (dates.get(date).containsKey(roomNumber));
     }
 
-    public boolean hasTimeSlot(Date date, int roomNumber, TimeSlot timeSlot) {
+    synchronized public boolean hasTimeSlot(Date date, int roomNumber, TimeSlot timeSlot) {
         return hasRoom(date, roomNumber) && (dates.get(date).get(roomNumber).containsKey(timeSlot));
     }
 
-    public boolean isBooked(Date date, int roomNumber, TimeSlot timeSlot) {
+    synchronized public boolean isBooked(Date date, int roomNumber, TimeSlot timeSlot) {
         return hasTimeSlot(date, roomNumber, timeSlot) && (dates.get(date).get(roomNumber).get(timeSlot).isBooked());
     }
 
-    public RoomRecord bookTimeSlot(Date date, int roomNumber, TimeSlot timeSlot, String id) {
+    synchronized public RoomRecord bookTimeSlot(Date date, int roomNumber, TimeSlot timeSlot, String id) {
         if (!isBooked(date, roomNumber, timeSlot)) {
             RoomRecord record = dates.get(date).get(roomNumber).get(timeSlot);
             record.setBookedBy(id);
@@ -129,19 +129,19 @@ public class Database {
     }
 
 
-    public RoomRecord getRoomRecordByBookingID(String bookingID) {
+    synchronized public RoomRecord getRoomRecordByBookingID(String bookingID) {
         return dates.values().stream()
                 .flatMap(integerHashMapHashMap -> integerHashMapHashMap.values().stream()
                         .flatMap(timeSlotRoomRecordHashMap -> timeSlotRoomRecordHashMap.values().stream()))
                 .filter(roomRecord -> roomRecord.getBookingID().equals(bookingID)).findFirst().orElse(null);
     }
 
-    public boolean hasBookingID(String bookingID) {
+    synchronized public boolean hasBookingID(String bookingID) {
         return getRoomRecordByBookingID(bookingID) != null;
     }
 
 
-    public RoomRecord getRoomRecord(Date date, int roomNumber, TimeSlot timeSlot) {
+    synchronized public RoomRecord getRoomRecord(Date date, int roomNumber, TimeSlot timeSlot) {
         if (hasTimeSlot(date, roomNumber, timeSlot)) {
             return dates.get(date).get(roomNumber).get(timeSlot);
         } else {

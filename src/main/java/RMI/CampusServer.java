@@ -1,6 +1,8 @@
 package RMI;
 
 import Core.*;
+import RMI.Admin.IAdminServer;
+import RMI.Student.IStudentServer;
 
 import java.io.IOException;
 import java.net.*;

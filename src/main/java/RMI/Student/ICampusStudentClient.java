@@ -1,4 +1,8 @@
-package Core;
+package RMI.Student;
+
+import Core.Campus;
+import Core.Date;
+import Core.TimeSlot;
 
 import java.rmi.RemoteException;
 
