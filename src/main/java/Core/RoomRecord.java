@@ -48,9 +48,9 @@ public class RoomRecord implements Serializable {
         this.bookedBy = bookedBy;
     }
 
-    public String generateBookingID() {
+    public String generateBookingID(String prefix) {
         UUID uuid = UUID.randomUUID();
-        bookingID = uuid.toString();
+        bookingID = prefix + uuid;
         return bookingID;
     }
 

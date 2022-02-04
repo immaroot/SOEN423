@@ -1,12 +1,13 @@
 package Core;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Database {
+    private final String campusName;
     private final HashMap<Date, HashMap<Integer, HashMap<TimeSlot, RoomRecord>>> dates;
 
-    public Database() {
+    public Database(String campusName) {
+        this.campusName = campusName;
         dates = new HashMap<>();
     }
 
@@ -25,7 +26,7 @@ public class Database {
         }
     }
 
-    synchronized public boolean addTimeSlot(Date date, int roomNumber, TimeSlot timeSlot) {
+    synchronized public void addTimeSlot(Date date, int roomNumber, TimeSlot timeSlot) {
         if (!dates.containsKey(date)) {
             addDate(date);
         }
@@ -34,9 +35,6 @@ public class Database {
         }
         if (!dates.get(date).get(roomNumber).containsKey(timeSlot) && !overlapsTimeSlots(date, roomNumber, timeSlot)) {
             dates.get(date).get(roomNumber).put(timeSlot, new RoomRecord(date, roomNumber, timeSlot));
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -117,22 +115,28 @@ public class Database {
         return hasTimeSlot(date, roomNumber, timeSlot) && (dates.get(date).get(roomNumber).get(timeSlot).isBooked());
     }
 
-    synchronized public RoomRecord bookTimeSlot(Date date, int roomNumber, TimeSlot timeSlot, String id) {
+    synchronized public String bookTimeSlot(Date date, int roomNumber, TimeSlot timeSlot, String id) {
         if (!isBooked(date, roomNumber, timeSlot)) {
             RoomRecord record = dates.get(date).get(roomNumber).get(timeSlot);
+            if (record == null) {
+                return null;
+            }
             record.setBookedBy(id);
-            record.generateBookingID();
-            return record;
+            record.generateBookingID(campusName);
+            return record.getBookingID();
         } else {
             return null;
         }
     }
 
+    synchronized public String getCampusName() {
+        return campusName;
+    }
 
     synchronized public RoomRecord getRoomRecordByBookingID(String bookingID) {
         return dates.values().stream()
                 .flatMap(integerHashMapHashMap -> integerHashMapHashMap.values().stream()
-                        .flatMap(timeSlotRoomRecordHashMap -> timeSlotRoomRecordHashMap.values().stream()))
+                    .flatMap(timeSlotRoomRecordHashMap -> timeSlotRoomRecordHashMap.values().stream()))
                 .filter(roomRecord -> roomRecord.getBookingID().equals(bookingID)).findFirst().orElse(null);
     }
 
@@ -147,51 +151,5 @@ public class Database {
         } else {
             return null;
         }
-    }
-
-
-    public static void main(String[] args) {
-        List<String> list = Arrays.asList("A", "B", "C", "D", "B");
-
-        HashMap<String, Integer> hashMap = new HashMap<>();
-
-        HashMap<String, HashMap<String, Integer>> hashMap2 = new HashMap<>();
-
-        for (int i=0; i < list.size(); i++) {
-            hashMap.put(list.get(i), i);
-        }
-
-
-        System.out.println("Filter: " + list.stream().filter(x -> x.equals("B")).count());
-        System.out.println("Predicate: " + hashMap.values().stream().filter(integer -> integer%2 == 0).count());
-
-        hashMap2.put("A", new HashMap<>());
-        hashMap2.get("A").put("A", 1);
-        hashMap2.get("A").put("B", 3);
-        hashMap2.put("B", new HashMap<>());
-        hashMap2.get("B").put("A", 3);
-        hashMap2.get("B").put("B", 3);
-
-//        List<Integer> integers = hashMap2.values().stream().map(stringIntegerHashMap -> stringIntegerHashMap.values().stream().filter(integer -> integer % 2 == 0)).flatMap(Collection::iterator)));
-//        long num = hashMap2.values().stream().map(stringIntegerHashMap -> stringIntegerHashMap.values().stream().filter(integer -> integer % 2 == 0)).count();
-//        System.out.println("count: " + num);
-
-        List<Integer> integers1 = hashMap2.values().stream().flatMap(stringIntegerHashMap -> stringIntegerHashMap.values().stream()).collect(Collectors.toList());
-        System.out.println("List of ints: ");
-        for (int i : integers1) {
-            System.out.print(i + " ");
-        }
-
-
-        Time time1 = new Time(8,0);
-        Time time2 = new Time(9,0);
-
-        TimeSlot timeSlot1 = new TimeSlot(time1, time2);
-
-        TimeSlot timeSlot2 = new TimeSlot(new Time(8,0), new Time(9,0));
-
-
-        System.out.println(timeSlot1.equals(timeSlot2));
-
     }
 }

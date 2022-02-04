@@ -1,0 +1,48 @@
+module Corba{
+    module CampusServerApp {
+
+        struct Date {
+            long year;
+            long month;
+            long day;
+        };
+
+        struct Time {
+            long hour;
+            long minute;
+        };
+
+        struct TimeSlot {
+            Time start;
+            Time end;
+        };
+
+        struct RoomRecord {
+            Date date;
+            long roomNumber;
+            TimeSlot timeSlot;
+            string roomRecordId;
+            string bookedBy;
+            string bookingId;
+
+        };
+
+        enum Campus { KKL, WST, DVL };
+
+        typedef sequence<TimeSlot> TimeSlotSet;
+
+        interface CampusServer {
+
+            string getAvailableTimeSlot(in Date date, in string id);
+
+            string bookRoom(in Campus campusName, in long roomNumber, in Date date, in TimeSlot timeSlot, in string id);
+
+            string cancelBooking(in string bookingID, in string id);
+
+            string createRoom(in long roomNumber, in Date date, in TimeSlotSet timeSlotSet, in string id);
+
+            string deleteRoom(in long roomNumber, in Date date, in TimeSlotSet timeSlotSet, in string id);
+        };
+
+    };
+};

@@ -23,7 +23,7 @@ public class DatabaseTest {
         roomNum2 = 301;
         timeSlot1 = new TimeSlot(new Time(8,0), new Time(9,0));
         timeSlot2 = new TimeSlot(new Time(9,0), new Time(10,0));
-        database = new Database();
+        database = new Database("KKL");
         database.addDate(date1);
         database.addDate(date2);
         database.addRoom(date1, roomNum1);
@@ -85,13 +85,13 @@ public class DatabaseTest {
 
     @Test
     public void getTimeSlotAvailableCountEmpty() {
-        Database newDatabase = new Database();
+        Database newDatabase = new Database("KKL");
         assertEquals(0, newDatabase.getTimeSlotAvailableCount(date1));
     }
 
     @Test
     public void deleteTimeSlotTest() {
-        Database databaseTest = new Database();
+        Database databaseTest = new Database("KKL");
         databaseTest.addTimeSlot(date1, roomNum1, timeSlot1);
         Set<TimeSlot> timeSlotSet = new HashSet<>();
         timeSlotSet.add(timeSlot1);
@@ -105,7 +105,13 @@ public class DatabaseTest {
 
     @Test
     public void verifyBookingID() {
-        String bookingID = database.getRoomRecord(date1, roomNum1, timeSlot1).generateBookingID();
+        String bookingID = database.getRoomRecord(date1, roomNum1, timeSlot1).generateBookingID(database.getCampusName());
         assertEquals(bookingID, database.getRoomRecord(date1, roomNum1, timeSlot1).getBookingID());
+    }
+
+    @Test
+    public void cancelBooking() {
+        String bookingID = database.bookTimeSlot(date1, roomNum1, timeSlot1, "KKL1234");
+        
     }
 }
